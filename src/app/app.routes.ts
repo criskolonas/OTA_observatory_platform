@@ -5,6 +5,7 @@ import {OtaFeaturesComponent} from "./ota-features/ota-features.component";
 import {OtaFeatureDetailsComponent} from "./ota-feature-details/ota-feature-details.component";
 import {RegionReportComponent} from "./region-report/region-report.component";
 import {PrefectureReportComponent} from "./prefecture-report/prefecture-report.component";
+import {LoginComponent} from "./login/login.component";
 
 export const routes: Routes = [
   { path: '', pathMatch: "full", component: HomeComponent },
@@ -14,4 +15,6 @@ export const routes: Routes = [
   { path: 'prefecture/:id', component: PrefectureReportComponent },
   { path: 'features', component: OtaFeaturesComponent },
   { path: 'features/:id', component: OtaFeatureDetailsComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegionsComponent },
 ];
