@@ -4,6 +4,8 @@ export interface UserLoginInterface {
 }
 
 export interface UserLoginResultsInterface {
+  email: string;
+  userName: string;
   token:string;
 }
 

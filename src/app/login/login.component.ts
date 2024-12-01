@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import {RegisterService} from "../shared/services/register-service";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgIf} from "@angular/common";
 import {LoginService} from "../shared/services/login-service";
+import {CookieService} from "ngx-cookie-service";
 
 @Component({
   selector: 'app-login',
@@ -12,7 +12,7 @@ import {LoginService} from "../shared/services/login-service";
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  constructor(private ls : LoginService, private formBuilder: FormBuilder) {
+  constructor(private ls : LoginService, private formBuilder: FormBuilder,private cookie:CookieService) {
   }
 
 
@@ -21,5 +21,10 @@ export class LoginComponent {
     password: ['', [Validators.required]]
   })
 
-  onSubmit(){this.ls.postLoginData(this.form.getRawValue()).subscribe(res=> console.log(res))}
+  onSubmit(){this.ls.postLoginData(this.form.getRawValue()).subscribe(res=> {
+    console.log('Login successful, token:', res.token);
+    this.cookie.set('authToken', res.token, 1, '/');
+
+  },(error) => {          console.error('Login failed:', error);
+  })}
 }
