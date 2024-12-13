@@ -1,20 +1,17 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, CanActivateChild, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { LoginService } from '../shared/services/login-service';  // Adjust import path as needed
-import { Observable} from 'rxjs';
-import {UserLoginResultsInterface} from "../shared/interfaces/UserFormInterface";
-import {CookieService} from "ngx-cookie-service";
+import { CanActivate, CanActivateChild, Router, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { LoginService } from '../shared/services/login-service';
+import {firstValueFrom, Observable} from 'rxjs';
+import { UserLoginResultsInterface } from '../shared/interfaces/UserFormInterface';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthGuard implements CanActivate, CanActivateChild {
-  public isAuthenticated: boolean = false; // Class-level variable to store session state
-  private _sessionDataReceived: UserLoginResultsInterface | null;
+  private _sessionDataReceived: UserLoginResultsInterface | null = null;
 
-  constructor(private cs: CookieService,private ls: LoginService,private router: Router) {
-    this._sessionDataReceived = {email:'',userName:'',token:this.cs.get('authToken')};
-  }
+  constructor(private cs: CookieService, private ls: LoginService, private router: Router) {}
 
   get sessionDataReceived(): UserLoginResultsInterface | null {
     return this._sessionDataReceived;
@@ -24,33 +21,32 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     this._sessionDataReceived = value;
   }
 
-  public checkAuthentication(): boolean {
-
-    if (!this._sessionDataReceived) {
-      this.router.navigate(['login'])
-      return false
-    }
-
-    const authToken = this._sessionDataReceived?.token;
-    if (authToken) {
-      // Async call to check session validity
-      this.ls.getSessionValidity(authToken).subscribe({
-        next: (res) => {
-          this._sessionDataReceived = res
-          this.cs.set("authToken", authToken)
-          this.isAuthenticated = true;  // Set the state once verified
-        },
-        error: (err) => {
-          console.error('An error occurred:', err);
-          this.isAuthenticated = false;
-          this.router.navigate(['login']);  // Redirect to login if failed
-        }
-      });
-    } else {
-      this.isAuthenticated = false;
-    }
-
-    return this.isAuthenticated;  // Return initial state (will be updated later after async check)
+  // Make checkAuthentication return a Promise<UserLoginResultsInterface | null>
+  public checkAuthentication(): Promise<UserLoginResultsInterface | null> {
+    return new Promise((resolve, reject) => {
+      const authToken = this._sessionDataReceived?.token ?? this.cs.get('authToken');
+      console.log(this.sessionDataReceived?.token, this.cs.get('authToken'))
+      if (authToken) {
+        // Async call to check session validity
+        this.ls.getSessionValidity(authToken).subscribe({
+          next: (res) => {
+            this._sessionDataReceived = res;
+            this.cs.set('authToken', res.token);
+            resolve(res); // Resolve with the session data
+          },
+          error: (err) => {
+            console.error('An error occurred:', err);
+            this.router.navigate(['login']); // Redirect to login if session is invalid
+            resolve(null); // Resolve with null if there's an error
+          },
+        });
+      } else {
+        console.log('abi')
+        // No auth token, navigate to login and resolve with null
+        this.router.navigate(['login']);
+        resolve(null);
+      }
+    });
   }
 
   public logout(): void {
@@ -60,9 +56,11 @@ export class AuthGuard implements CanActivate, CanActivateChild {
       try {
         token = this.sessionDataReceived.token;
         this.ls.logoutUser(token).subscribe({next:(res:UserLoginResultsInterface)=> console.log(res)});
-        this.router.navigate(['login']);
+        this.sessionDataReceived = null;
+        this.cs.delete('authToken');
+        window.location.reload()
       } catch (error) {
-        console.error('Failed to parse authToken:', error);
+        console.error('An error occurred during logout:', error);
       }
     } else {
       console.warn('No authToken found');
@@ -70,7 +68,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   }
 
   public redirect(): void {
-    this.isAuthenticated ? this.router.navigate(['explore-map']):null;
+    this.sessionDataReceived ? this.router.navigate(['explore-map']) : null;
   }
 
   public isAuthRoute(): boolean {
@@ -78,17 +76,42 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     return authRoutes.includes(this.router.url);
   }
 
-  canActivate(
-    _route: ActivatedRouteSnapshot,
-    _state: RouterStateSnapshot
-  ): boolean{
-    return this.checkAuthentication();
+  public isNextAuthRoute( _state: RouterStateSnapshot): boolean {
+    const authRoutes = ['/register', '/login'];
+    console.log(_state.url)
+    return authRoutes.includes(_state.url);
   }
 
-  canActivateChild(
+  public async canActivate(
     _route: ActivatedRouteSnapshot,
     _state: RouterStateSnapshot
-  ): Observable<boolean> | Promise<boolean> | boolean {
-    return this.checkAuthentication();
+  ): Promise<boolean | UrlTree> {
+    const userSession = await this.checkAuthentication(); // Wait for checkAuthentication to complete
+    if (userSession) {
+      if(!this.isNextAuthRoute(_state) ){
+        console.log('hesdsdll')
+
+        return true;
+      }else{
+        console.log('helli')
+
+        return this.router.navigate(['/']);
+      }
+    } else {
+      console.log('hella')
+      return this.router.navigate(['login']); // Redirect to login if not authenticated
+    }
+  }
+
+  public async canActivateChild(
+    _route: ActivatedRouteSnapshot,
+    _state: RouterStateSnapshot
+  ): Promise<boolean | UrlTree> {
+    const userSession = await this.checkAuthentication(); // Wait for checkAuthentication to complete
+    if (userSession && !this.isAuthRoute()) {
+      return true;
+    } else {
+      return this.router.navigate(['login']); // Redirect to login if not authenticated
+    }
   }
 }

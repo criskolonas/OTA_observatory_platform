@@ -1,4 +1,4 @@
-import { Routes, CanActivate } from '@angular/router';
+import {Routes, CanActivate, RouterModule, ROUTES, ExtraOptions} from '@angular/router';
 import {HomeComponent} from "./home/home.component";
 import {RegionsComponent} from "./regions/regions.component";
 import {OtaFeaturesComponent} from "./ota-features/ota-features.component";
@@ -9,6 +9,10 @@ import {LoginComponent} from "./login/login.component";
 import {RegisterComponent} from "./register/register.component";
 import {AuthGuard} from "./utility-classes/authguard";
 
+export const routerConfig:ExtraOptions = {
+  onSameUrlNavigation: 'reload'
+};
+
 export const routes: Routes = [
   { path: '', pathMatch: 'full', component: HomeComponent, canActivate: [AuthGuard] },
 
@@ -17,7 +21,7 @@ export const routes: Routes = [
     loadChildren: () => import('./explore-map/explore-map.module').then(m => m.ExploreMapModule),
     canActivateChild: [AuthGuard],
   },
-  { path: 'regions', component: RegionsComponent,    canActivate: [AuthGuard]},
+  { path: 'regions', component: RegionsComponent,canActivate: [AuthGuard]},
   { path: 'regions/:id', component: RegionReportComponent ,canActivate: [AuthGuard]},
   { path: 'prefecture/:id', component: PrefectureReportComponent,canActivate: [AuthGuard] },
   { path: 'features', component: OtaFeaturesComponent ,canActivate: [AuthGuard]},
@@ -25,3 +29,5 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'register', component: RegisterComponent }
 ];
+
+

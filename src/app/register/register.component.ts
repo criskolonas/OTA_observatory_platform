@@ -24,7 +24,7 @@ export class RegisterComponent   {
   })
 
   onSubmit(){this.rs.postRegistrationData(this.form.getRawValue()).subscribe({next:(res)=>{
-      this.authGuard.sessionDataReceived = res.data
+      this.authGuard.sessionDataReceived = res
       this.router.navigate([''])
     }})}
 
