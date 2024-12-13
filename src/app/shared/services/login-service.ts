@@ -19,4 +19,12 @@ export class LoginService {
   postLoginData(loginData:UserLoginInterface): Observable<UserLoginResultsInterface> {
     return this.http.post<UserLoginResultsInterface>(this.apiUrl + 'login', loginData);
   }
+
+  getSessionValidity(token: string): Observable<UserLoginResultsInterface> {
+    return this.http.get<UserLoginResultsInterface>(this.apiUrl + 'token-check', {params: {token: token}});
+  }
+
+  logoutUser(token: string): Observable<UserLoginResultsInterface> {
+    return this.http.get<UserLoginResultsInterface>(this.apiUrl + 'logout', {params: {token: token}});
+  }
 }

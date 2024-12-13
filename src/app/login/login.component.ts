@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import {Component, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgIf} from "@angular/common";
 import {LoginService} from "../shared/services/login-service";
-import {CookieService} from "ngx-cookie-service";
+
+import {Router} from "@angular/router";
+import {AuthGuard} from "../utility-classes/authguard";
 
 @Component({
   selector: 'app-login',
@@ -11,8 +13,12 @@ import {CookieService} from "ngx-cookie-service";
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
-  constructor(private ls : LoginService, private formBuilder: FormBuilder,private cookie:CookieService) {
+export class LoginComponent  {
+  @Output() errorMessage:String;
+
+  constructor(private ls : LoginService, private formBuilder: FormBuilder,private authGuard:AuthGuard,private router: Router
+  ) {
+    this.errorMessage = '';
   }
 
 
@@ -21,10 +27,19 @@ export class LoginComponent {
     password: ['', [Validators.required]]
   })
 
-  onSubmit(){this.ls.postLoginData(this.form.getRawValue()).subscribe(res=> {
-    console.log('Login successful, token:', res.token);
-    this.cookie.set('authToken', res.token, 1, '/');
-
-  },(error) => {          console.error('Login failed:', error);
-  })}
+  onSubmit() {
+    this.ls.postLoginData(this.form.getRawValue()).subscribe({
+      next: (res) => {
+        this.authGuard.sessionDataReceived = res
+        this.router.navigate(['']);
+      },
+      error: (error) => {
+        if (error.status === 404) {
+          this.errorMessage = 'User Not Found';
+        } else if (error.status === 401) {
+          this.errorMessage = 'Invalid password. Please try again.';
+        }
+      }
+    });
+  }
 }

@@ -1,8 +1,9 @@
-import { Component,inject } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
-import {HttpClient} from "@angular/common/http";
 import {RegisterService} from "../shared/services/register-service";
 import {NgIf} from "@angular/common";
+import {Router} from "@angular/router";
+import {AuthGuard} from "../utility-classes/authguard";
 
 @Component({
   selector: 'app-register',
@@ -11,11 +12,10 @@ import {NgIf} from "@angular/common";
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
-export class RegisterComponent {
+export class RegisterComponent   {
 
-  constructor(private rs : RegisterService, private formBuilder: FormBuilder) {
+  constructor(private rs : RegisterService, private formBuilder: FormBuilder,private router: Router, private authGuard: AuthGuard) {
   }
-
 
   form = this.formBuilder.nonNullable.group({
     userName: ['', [Validators.required]],
@@ -23,6 +23,9 @@ export class RegisterComponent {
     password: ['', [Validators.required]]
   })
 
-  onSubmit(){this.rs.postRegistrationData(this.form.getRawValue()).subscribe(res=> console.log(res))}
+  onSubmit(){this.rs.postRegistrationData(this.form.getRawValue()).subscribe({next:(res)=>{
+      this.authGuard.sessionDataReceived = res.data
+      this.router.navigate([''])
+    }})}
 
 }

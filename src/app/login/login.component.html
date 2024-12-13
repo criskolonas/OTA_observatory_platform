@@ -16,4 +16,11 @@
   </div>
 
   <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Login</button>
+
+  <div *ngIf="errorMessage" class="error-message mt-3">
+    <p>{{ errorMessage }}</p>
+  </div>
+
 </form>
+
+

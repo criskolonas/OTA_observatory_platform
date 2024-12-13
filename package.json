@@ -23,6 +23,8 @@
     "chart.js": "^4.4.4",
     "geojson2svg": "^2.0.1",
     "leaflet": "^1.9.4",
+    "moment": "^2.30.1",
+    "ngx-cookie-service": "^19.0.0",
     "primeflex": "^3.3.1",
     "primeicons": "^7.0.0",
     "primeng": "^17.18.9",

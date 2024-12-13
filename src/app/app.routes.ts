@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { Routes, CanActivate } from '@angular/router';
 import {HomeComponent} from "./home/home.component";
 import {RegionsComponent} from "./regions/regions.component";
 import {OtaFeaturesComponent} from "./ota-features/ota-features.component";
@@ -7,15 +7,21 @@ import {RegionReportComponent} from "./region-report/region-report.component";
 import {PrefectureReportComponent} from "./prefecture-report/prefecture-report.component";
 import {LoginComponent} from "./login/login.component";
 import {RegisterComponent} from "./register/register.component";
+import {AuthGuard} from "./utility-classes/authguard";
 
 export const routes: Routes = [
-  { path: '', pathMatch: "full", component: HomeComponent },
-  { path: 'explore-map', loadChildren: () => import('./explore-map/explore-map.module').then((m) => m.ExploreMapModule), },
-  { path: 'regions', component: RegionsComponent },
-  { path: 'regions/:id', component: RegionReportComponent },
-  { path: 'prefecture/:id', component: PrefectureReportComponent },
-  { path: 'features', component: OtaFeaturesComponent },
-  { path: 'features/:id', component: OtaFeatureDetailsComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  { path: '', pathMatch: 'full', component: HomeComponent, canActivate: [AuthGuard] },
+
+  {
+    path: 'explore-map',
+    loadChildren: () => import('./explore-map/explore-map.module').then(m => m.ExploreMapModule),
+    canActivateChild: [AuthGuard],
+  },
+  { path: 'regions', component: RegionsComponent,    canActivate: [AuthGuard]},
+  { path: 'regions/:id', component: RegionReportComponent ,canActivate: [AuthGuard]},
+  { path: 'prefecture/:id', component: PrefectureReportComponent,canActivate: [AuthGuard] },
+  { path: 'features', component: OtaFeaturesComponent ,canActivate: [AuthGuard]},
+  { path: 'features/:id', component: OtaFeatureDetailsComponent,canActivate: [AuthGuard] },
+  { path: 'login', component: LoginComponent},
+  { path: 'register', component: RegisterComponent }
 ];
