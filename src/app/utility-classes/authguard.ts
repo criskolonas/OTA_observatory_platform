@@ -25,7 +25,6 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   public checkAuthentication(): Promise<UserLoginResultsInterface | null> {
     return new Promise((resolve, reject) => {
       const authToken = this._sessionDataReceived?.token ?? this.cs.get('authToken');
-      console.log(this.sessionDataReceived?.token, this.cs.get('authToken'))
       if (authToken) {
         // Async call to check session validity
         this.ls.getSessionValidity(authToken).subscribe({
@@ -41,9 +40,6 @@ export class AuthGuard implements CanActivate, CanActivateChild {
           },
         });
       } else {
-        console.log('abi')
-        // No auth token, navigate to login and resolve with null
-        this.router.navigate(['login']);
         resolve(null);
       }
     });
@@ -58,7 +54,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         this.ls.logoutUser(token).subscribe({next:(res:UserLoginResultsInterface)=> console.log(res)});
         this.sessionDataReceived = null;
         this.cs.delete('authToken');
-        window.location.reload()
+        this.router.navigate(['login'])
       } catch (error) {
         console.error('An error occurred during logout:', error);
       }
@@ -85,33 +81,22 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   public async canActivate(
     _route: ActivatedRouteSnapshot,
     _state: RouterStateSnapshot
-  ): Promise<boolean | UrlTree> {
+  ): Promise<boolean> {
     const userSession = await this.checkAuthentication(); // Wait for checkAuthentication to complete
     if (userSession) {
-      if(!this.isNextAuthRoute(_state) ){
-        console.log('hesdsdll')
-
         return true;
-      }else{
-        console.log('helli')
-
-        return this.router.navigate(['/']);
-      }
-    } else {
-      console.log('hella')
-      return this.router.navigate(['login']); // Redirect to login if not authenticated
     }
+    return false;
   }
 
   public async canActivateChild(
     _route: ActivatedRouteSnapshot,
     _state: RouterStateSnapshot
-  ): Promise<boolean | UrlTree> {
+  ): Promise<boolean> {
     const userSession = await this.checkAuthentication(); // Wait for checkAuthentication to complete
     if (userSession && !this.isAuthRoute()) {
       return true;
-    } else {
-      return this.router.navigate(['login']); // Redirect to login if not authenticated
     }
+    return false
   }
 }

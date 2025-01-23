@@ -3,7 +3,7 @@ import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgIf} from "@angular/common";
 import {LoginService} from "../shared/services/login-service";
 
-import {Router} from "@angular/router";
+import {Router, UrlTree} from "@angular/router";
 import {AuthGuard} from "../utility-classes/authguard";
 
 @Component({
@@ -21,11 +21,23 @@ export class LoginComponent  {
     this.errorMessage = '';
   }
 
+  ngOnInit() {
+    const userSession = this.authGuard.checkAuthentication().then((userSession=>{
+      if(userSession?.token !== '' ){
+        this.router.navigate(['/']);
+      }
+    }))
+  }
+
 
   form = this.formBuilder.nonNullable.group({
     email: ['', [Validators.required]],
     password: ['', [Validators.required]]
   })
+
+  public navigateToRegister():void {
+    this.router.navigate(['register']);
+  }
 
   onSubmit() {
     this.ls.postLoginData(this.form.getRawValue()).subscribe({

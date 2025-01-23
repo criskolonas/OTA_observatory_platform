@@ -1,0 +1,92 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+  background-color: #f5f5f5; /* Light background for contrast */
+}
+
+.login-box {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for the box */
+  max-width: 400px;
+  height: 400px;
+  width: 100%; /* Responsive width */
+  display: flex;
+  flex-direction: column;
+  gap: 50px
+}
+
+form{
+  display: flex;
+}
+
+.login-box h2 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.login-box form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-box form .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.login-box form label {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.login-box form input {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%; /* Make input take full width */
+}
+
+.login-box form button {
+  padding: 0.75rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%; /* Full-width button */
+}
+
+.login-box form button:hover {
+  background-color: #0056b3;
+}
+
+.error {
+  position: relative;
+  color: red;
+  margin-bottom: 1rem;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.btn-primary{
+  padding: 0.75rem;
+  background-color: green;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+}

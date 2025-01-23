@@ -20,6 +20,16 @@ export class AppComponent {
 
   constructor(private router:Router,private cookieService:CookieService,private authGuard :AuthGuard) {}
 
+  ngOnInit() {
+    const userSession = this.authGuard.checkAuthentication().then((userSession=>{
+      console.log(userSession);
+
+      if(!userSession){
+        this.router.navigate(['/login']);
+      }
+    }))
+  }
+
   isLoggedIn(): boolean {
     const token = this.cookieService.get('authToken'); // Get token from cookies
     return !!token; // Return true if token exists, otherwise false

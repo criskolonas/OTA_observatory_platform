@@ -1,4 +1,7 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
+<div class="container">
+  <div class="login-box">
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="form-group">
     <label for="email">Email</label>
     <input type="email" id="email" formControlName="email" class="form-control" placeholder="Enter your email" />
@@ -20,7 +23,11 @@
   <div *ngIf="errorMessage" class="error-message mt-3">
     <p>{{ errorMessage }}</p>
   </div>
-
 </form>
+
+    <button (click)="navigateToRegister()" class="btn btn-primary"><a>Εγγραφή</a></button>
+
+  </div>
+</div>
 
 

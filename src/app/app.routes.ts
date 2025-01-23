@@ -26,8 +26,8 @@ export const routes: Routes = [
   { path: 'prefecture/:id', component: PrefectureReportComponent,canActivate: [AuthGuard] },
   { path: 'features', component: OtaFeaturesComponent ,canActivate: [AuthGuard]},
   { path: 'features/:id', component: OtaFeatureDetailsComponent,canActivate: [AuthGuard] },
-  { path: 'login', component: LoginComponent},
-  { path: 'register', component: RegisterComponent }
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
 ];
 
 

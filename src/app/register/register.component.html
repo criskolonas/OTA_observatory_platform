@@ -1,4 +1,7 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
+<div class="container">
+  <div class="register-box">
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="form-group">
     <label for="userName">Username</label>
     <input type="text" id="userName" formControlName="userName" class="form-control" />
@@ -24,4 +27,9 @@
   </div>
 
   <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Submit</button>
+
 </form>
+    <button (click)="navigateToLogin()" class="btn btn-primary"><a>Σύνδεση Χρήστη</a></button>
+
+  </div>
+</div>
