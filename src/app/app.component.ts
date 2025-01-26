@@ -1,10 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {Router, RouterOutlet} from '@angular/router';
+import { Router, RouterOutlet} from '@angular/router';
 import {NavbarComponent} from "./core/navbar/navbar.component";
 import { CookieService } from 'ngx-cookie-service';
-import {NgIf} from "@angular/common";
+import { NgIf} from "@angular/common";
 import {UserLoginResultsInterface} from "./shared/interfaces/UserFormInterface";
-import {LoginService} from "./shared/services/login-service";
 import {AuthGuard} from "./utility-classes/authguard";
 
 @Component({
@@ -18,14 +17,16 @@ import {AuthGuard} from "./utility-classes/authguard";
 export class AppComponent {
   title = 'ota-observatory-platform';
 
-  constructor(private router:Router,private cookieService:CookieService,private authGuard :AuthGuard) {}
+  constructor(private router:Router,private cookieService:CookieService,private authGuard :AuthGuard) {
+  }
+
 
   ngOnInit() {
+    console.log(this.authGuard.isAuthRoute())
     const userSession = this.authGuard.checkAuthentication().then((userSession=>{
-      console.log(userSession);
-
-      if(!userSession){
-        this.router.navigate(['/login']);
+      if(!userSession && !this.authGuard.isAuthRoute()){
+        console.log('userSession',userSession)
+        this.router.navigate(['login']);
       }
     }))
   }

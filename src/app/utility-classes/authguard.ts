@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, CanActivateChild, Router, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
+import {
+  CanActivate,
+  CanActivateChild,
+  Router,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  ActivatedRoute, UrlSegment, Event, NavigationEnd
+} from '@angular/router';
 import { LoginService } from '../shared/services/login-service';
-import {firstValueFrom, Observable} from 'rxjs';
 import { UserLoginResultsInterface } from '../shared/interfaces/UserFormInterface';
 import { CookieService } from 'ngx-cookie-service';
 
@@ -9,9 +15,23 @@ import { CookieService } from 'ngx-cookie-service';
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate, CanActivateChild {
+
+  route: string = window.location.pathname;
+
+
   private _sessionDataReceived: UserLoginResultsInterface | null = null;
 
-  constructor(private cs: CookieService, private ls: LoginService, private router: Router) {}
+  private _allowedUnauthenticatedRoutes: string[] = ['/login','/register'];
+
+  constructor(private cs: CookieService, private ls: LoginService, private router: Router) {
+    router.events.subscribe({
+      next: (s: Event) => {
+        if (s instanceof NavigationEnd) {
+          this.route = s.url;
+        }
+      }
+    })
+  }
 
   get sessionDataReceived(): UserLoginResultsInterface | null {
     return this._sessionDataReceived;
@@ -63,19 +83,9 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     }
   }
 
-  public redirect(): void {
-    this.sessionDataReceived ? this.router.navigate(['explore-map']) : null;
-  }
-
   public isAuthRoute(): boolean {
-    const authRoutes = ['/register', '/login'];
-    return authRoutes.includes(this.router.url);
-  }
-
-  public isNextAuthRoute( _state: RouterStateSnapshot): boolean {
-    const authRoutes = ['/register', '/login'];
-    console.log(_state.url)
-    return authRoutes.includes(_state.url);
+    console.log(this.route)
+    return this._allowedUnauthenticatedRoutes.includes(this.route);
   }
 
   public async canActivate(
