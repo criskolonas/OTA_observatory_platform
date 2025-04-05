@@ -3,7 +3,7 @@
     <h1>{{ otaVariable.name }}</h1>
     <p>{{ otaVariable.description }}</p>
 
-
+    <app-month-picker></app-month-picker>
 <!--    if confiscation show this and this....-->
 
     <app-confiscations-details *ngIf="otaVariable.variableType === OtaVariableEnum.CONFISCATION"></app-confiscations-details>

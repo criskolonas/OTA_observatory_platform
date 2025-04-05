@@ -1,8 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ConfiscationsStatsService} from "../../shared/services/confiscations-stats.service";
 import {OwnersStatsService} from "../../shared/services/owners-stats.service";
 import {OwnersPerMonth} from "../../shared/models/stats/owners-per-month";
 import {ChartModule} from "primeng/chart";
+import {GraphSettings} from "../../utility-classes/graphsettings";
+import {Subscription} from "rxjs";
 
 
 @Component({
@@ -14,22 +16,38 @@ import {ChartModule} from "primeng/chart";
   templateUrl: './owner-details.component.html',
   styleUrl: './owner-details.component.scss'
 })
-export class OwnerDetailsComponent implements OnInit{
+export class OwnerDetailsComponent implements OnInit,OnDestroy{
   basicData: any;
 
   basicOptions: any;
   monthDate: string = '';
+  private graphSettingsSubscription: Subscription | undefined;
 
   constructor(
-    private ownersStatsService: OwnersStatsService
-  ) {}
+    private ownersStatsService: OwnersStatsService,
+    private graphSettings: GraphSettings
+
+) {}
 
   ngOnInit() {
-    this.initializeOwnerPerPrefectureDiagram();
+    // Subscribe to the graphSettings observable
+    this.graphSettingsSubscription = this.graphSettings.graphSettings$.subscribe({
+      next: (settings) => {
+        this.initializeOwnerPerPrefectureDiagram(settings.selectedDate);
+      }
+    });
   }
 
-  initializeOwnerPerPrefectureDiagram() {
-    this.ownersStatsService.getOwnersByPrefecturePerMonth().subscribe({
+  ngOnDestroy(): void {
+    // Unsubscribe when the component is destroyed
+    if (this.graphSettingsSubscription) {
+      this.graphSettings.updateGraphSettings({selectedDate:new Date()});
+      this.graphSettingsSubscription.unsubscribe();
+    }
+  }
+
+  initializeOwnerPerPrefectureDiagram(date: Date) {
+    this.ownersStatsService.getOwnersByPrefecturePerMonth(date).subscribe({
       next: (data: OwnersPerMonth) => {
         this.initializeDiagram(data);
       }
@@ -42,7 +60,6 @@ export class OwnerDetailsComponent implements OnInit{
     const textColor = documentStyle.getPropertyValue('--text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-    this.monthDate = new Date(data.monthDate).toLocaleDateString('el-GR', { year: 'numeric', month: 'long' });
 
     this.basicData = {
       labels: data.ownersByPrefecture.map(d => d.prefectureName),// ['Q1', 'Q2', 'Q3', 'Q4'],

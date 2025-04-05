@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import {environment} from "../../../environments/environment";
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import { environment } from "../../../environments/environment";
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { Observable } from "rxjs";
 
-import {UserLoginInterface, UserLoginResultsInterface} from "../interfaces/UserFormInterface";
+import {UserLoginInterface, UserLoginResultsInterface, UserSessionInterface} from "../interfaces/UserFormInterface";
 
 @Injectable({
   providedIn: 'root'
@@ -16,15 +16,23 @@ export class LoginService {
     private http: HttpClient
   ) { }
 
-  postLoginData(loginData:UserLoginInterface): Observable<UserLoginResultsInterface> {
-    return this.http.post<UserLoginResultsInterface>(this.apiUrl + 'login', loginData);
+  postLoginData(loginData: UserLoginInterface): Observable<UserLoginResultsInterface> {
+    return this.http.post<UserLoginResultsInterface>(this.apiUrl + 'login', loginData, {
+      withCredentials: true
+    });
   }
 
   getSessionValidity(token: string): Observable<UserLoginResultsInterface> {
-    return this.http.get<UserLoginResultsInterface>(this.apiUrl + 'token-check', {params: {token: token}});
+    return this.http.get<UserSessionInterface>(this.apiUrl + 'token-check', {
+      params: { token: token },
+      withCredentials: true
+    });
   }
 
   logoutUser(token: string): Observable<UserLoginResultsInterface> {
-    return this.http.get<UserLoginResultsInterface>(this.apiUrl + 'logout', {params: {token: token}});
+    return this.http.get<UserLoginResultsInterface>(this.apiUrl + 'logout', {
+      params: { token: token },
+      withCredentials: true
+    });
   }
 }

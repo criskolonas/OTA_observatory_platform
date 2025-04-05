@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ChartModule} from "primeng/chart";
 import {AreaStatsService} from "../../shared/services/area-stats.service";
 import {AreaPerMonth} from "../../shared/models/stats/area-per-month";
+import {Subscription} from "rxjs";
+import {GraphSettings} from "../../utility-classes/graphsettings";
 
 @Component({
   selector: 'app-area-details',
@@ -12,22 +14,39 @@ import {AreaPerMonth} from "../../shared/models/stats/area-per-month";
   templateUrl: './area-details.component.html',
   styleUrl: './area-details.component.scss'
 })
-export class AreaDetailsComponent {
+export class AreaDetailsComponent implements OnInit, OnDestroy {
   basicData: any;
 
   basicOptions: any;
   monthDate: string = '';
 
+  private graphSettingsSubscription: Subscription | undefined;
+
   constructor(
-    private areaStatsService: AreaStatsService
+    private areaStatsService: AreaStatsService,
+    private graphSettings: GraphSettings
+
   ) {}
 
-  ngOnInit() {
-    this.initializeAreaPerPrefectureDiagram();
+  ngOnDestroy(): void {
+    // Unsubscribe when the component is destroyed
+    if (this.graphSettingsSubscription) {
+      this.graphSettings.updateGraphSettings({selectedDate:new Date()});
+      this.graphSettingsSubscription.unsubscribe();
+    }
   }
 
-  initializeAreaPerPrefectureDiagram() {
-    this.areaStatsService.getAreaByPrefecturePerMonth().subscribe({
+  ngOnInit() {
+    // Subscribe to the graphSettings observable
+    this.graphSettingsSubscription = this.graphSettings.graphSettings$.subscribe({
+      next: (settings) => {
+        this.initializeAreaPerPrefectureDiagram(settings.selectedDate);
+      }
+    });
+  }
+
+  initializeAreaPerPrefectureDiagram(date: Date) {
+    this.areaStatsService.getAreaByPrefecturePerMonth(date).subscribe({
       next: (data: AreaPerMonth) => {
         this.initializeDiagram(data);
       }
@@ -40,7 +59,7 @@ export class AreaDetailsComponent {
     const textColor = documentStyle.getPropertyValue('--text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-    this.monthDate = new Date(data.monthDate).toLocaleDateString('el-GR', { year: 'numeric', month: 'long' });
+
     this.basicData = {
       labels: data.areaByPrefecture.map(d => d.prefectureName),// ['Q1', 'Q2', 'Q3', 'Q4'],
       datasets: [

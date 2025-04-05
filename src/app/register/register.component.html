@@ -1,7 +1,7 @@
 <div class="container">
   <div class="register-box">
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <form class="form-container" [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="form-group">
     <label for="userName">Username</label>
     <input type="text" id="userName" formControlName="userName" class="form-control" />

@@ -1,7 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ChartModule} from "primeng/chart";
 import {MortgagesStatsService} from "../../shared/services/mortgages-stats.service";
 import {MortgagesPerMonth} from "../../shared/models/stats/mortgages-per-month";
+import {Subscription} from "rxjs";
+import {GraphSettings} from "../../utility-classes/graphsettings";
 
 @Component({
   selector: 'app-mortgage-details',
@@ -12,22 +14,36 @@ import {MortgagesPerMonth} from "../../shared/models/stats/mortgages-per-month";
   templateUrl: './mortgage-details.component.html',
   styleUrl: './mortgage-details.component.scss'
 })
-export class MortgageDetailsComponent implements OnInit{
+export class MortgageDetailsComponent implements OnInit,OnDestroy{
   basicData: any;
 
   basicOptions: any;
   monthDate: string = '';
+  private graphSettingsSubscription: Subscription | undefined;
 
   constructor(
-    private mortgagesStatsService: MortgagesStatsService
+    private mortgagesStatsService: MortgagesStatsService,    private graphSettings: GraphSettings
+
   ) {}
 
   ngOnInit() {
-    this.initializeMortgagePerPrefectureDiagram();
+    // Subscribe to the graphSettings observable
+    this.graphSettingsSubscription = this.graphSettings.graphSettings$.subscribe({
+      next: (settings) => {
+        this.initializeMortgagePerPrefectureDiagram(settings.selectedDate);
+      }
+    });
+  }
+  ngOnDestroy(): void {
+    // Unsubscribe when the component is destroyed
+    if (this.graphSettingsSubscription) {
+      this.graphSettings.updateGraphSettings({selectedDate:new Date()});
+      this.graphSettingsSubscription.unsubscribe();
+    }
   }
 
-  initializeMortgagePerPrefectureDiagram() {
-    this.mortgagesStatsService.getConfiscationsByPrefecturePerMonth().subscribe({
+  initializeMortgagePerPrefectureDiagram(date: Date) {
+    this.mortgagesStatsService.getConfiscationsByPrefecturePerMonth(date).subscribe({
       next: (data: MortgagesPerMonth) => {
         this.initializeDiagram(data);
       }
@@ -40,7 +56,6 @@ export class MortgageDetailsComponent implements OnInit{
     const textColor = documentStyle.getPropertyValue('--text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-    this.monthDate = new Date(data.monthDate).toLocaleDateString('el-GR', { year: 'numeric', month: 'long' });
 
     this.basicData = {
       labels: data.mortgagesByPrefecture.map(d => d.prefectureName),// ['Q1', 'Q2', 'Q3', 'Q4'],

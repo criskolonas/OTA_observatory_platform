@@ -16,6 +16,6 @@ export class RegisterService {
   ) { }
 
   postRegistrationData(registrationData:UserRegisterInterface): Observable<any> {
-    return this.http.post(this.apiUrl + 'register', registrationData);
+    return this.http.post(this.apiUrl + 'register', registrationData,{withCredentials:true});
   }
 }

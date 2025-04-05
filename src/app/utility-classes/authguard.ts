@@ -8,7 +8,7 @@ import {
   ActivatedRoute, UrlSegment, Event, NavigationEnd
 } from '@angular/router';
 import { LoginService } from '../shared/services/login-service';
-import { UserLoginResultsInterface } from '../shared/interfaces/UserFormInterface';
+import {UserLoginResultsInterface, UserSessionInterface} from '../shared/interfaces/UserFormInterface';
 import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
@@ -16,14 +16,14 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class AuthGuard implements CanActivate, CanActivateChild {
 
-  route: string = window.location.pathname;
+  private route: string = window.location.pathname;
 
-
-  private _sessionDataReceived: UserLoginResultsInterface | null = null;
+  private _sessionDataReceived: UserSessionInterface | null = null;
 
   private _allowedUnauthenticatedRoutes: string[] = ['/login','/register'];
 
   constructor(private cs: CookieService, private ls: LoginService, private router: Router) {
+    //check for changes in the path and change the value of the route
     router.events.subscribe({
       next: (s: Event) => {
         if (s instanceof NavigationEnd) {
@@ -33,11 +33,11 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     })
   }
 
-  get sessionDataReceived(): UserLoginResultsInterface | null {
+  get sessionDataReceived(): UserSessionInterface | null {
     return this._sessionDataReceived;
   }
 
-  set sessionDataReceived(value: UserLoginResultsInterface | null) {
+  set sessionDataReceived(value: UserSessionInterface | null) {
     this._sessionDataReceived = value;
   }
 
@@ -65,13 +65,14 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     });
   }
 
+  //send request to clear session data and clear frontend session data
   public logout(): void {
     let token = '';
 
     if (this.sessionDataReceived) {
       try {
         token = this.sessionDataReceived.token;
-        this.ls.logoutUser(token).subscribe({next:(res:UserLoginResultsInterface)=> console.log(res)});
+        this.ls.logoutUser(token).pipe().subscribe();
         this.sessionDataReceived = null;
         this.cs.delete('authToken');
         this.router.navigate(['login'])
@@ -83,8 +84,8 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     }
   }
 
+  //check if current path is one of the auth routes
   public isAuthRoute(): boolean {
-    console.log(this.route)
     return this._allowedUnauthenticatedRoutes.includes(this.route);
   }
 

@@ -10,6 +10,7 @@ import {MortgageDetailsComponent} from "./mortgage-details/mortgage-details.comp
 import {OwnerDetailsComponent} from "./owner-details/owner-details.component";
 import {PropertiesDetailsComponent} from "./properties-details/properties-details.component";
 import {PropertyDealingDetailsComponent} from "./property-dealing-details/property-dealing-details.component";
+import {MonthPickerComponent} from "../shared-components/month-picker/month-picker.component";
 
 @Component({
   selector: 'app-ota-feature-details',
@@ -21,7 +22,8 @@ import {PropertyDealingDetailsComponent} from "./property-dealing-details/proper
     MortgageDetailsComponent,
     OwnerDetailsComponent,
     PropertiesDetailsComponent,
-    PropertyDealingDetailsComponent
+    PropertyDealingDetailsComponent,
+    MonthPickerComponent
   ],
   templateUrl: './ota-feature-details.component.html',
   styleUrl: './ota-feature-details.component.scss'

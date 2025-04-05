@@ -1,0 +1,20 @@
+.month-picker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.arrow-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  padding: 0 10px;
+}
+
+.month-display {
+  margin: 0 15px;
+  font-size: 20px;
+}

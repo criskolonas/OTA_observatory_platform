@@ -6,8 +6,14 @@ export interface UserLoginInterface {
 export interface UserLoginResultsInterface {
   email: string;
   userName: string;
-  token:string;
 }
+
+export interface UserSessionInterface {
+  email: string;
+  userName: string;
+  token: string;
+}
+
 
 export interface UserRegisterInterface {
   email: string;
