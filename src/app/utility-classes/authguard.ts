@@ -11,7 +11,7 @@ import { LoginService } from '../shared/services/login-service';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuard implements CanActivate, CanActivateChild {
+export class AuthGuard implements CanActivate {
 
   private _shouldDisplayNav = false
 
@@ -62,10 +62,4 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     return await this.checkAuthentication()
   }
 
-  public async canActivateChild(
-    _route: ActivatedRouteSnapshot,
-    _state: RouterStateSnapshot
-  ): Promise<boolean> {
-    return await this.checkAuthentication();
-  }
 }

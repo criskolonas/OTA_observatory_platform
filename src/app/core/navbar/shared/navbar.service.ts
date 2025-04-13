@@ -47,9 +47,9 @@ export class NavbarService {
     },
     {
       label: 'Αποσύνδεση',
-      path: [''],
+      path: ['logout'],
       action: () => {
-        this.authguard.logout()
+        this.router.navigate(['logout'])
       }
     },
   ];

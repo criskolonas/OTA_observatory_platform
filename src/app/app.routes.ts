@@ -8,6 +8,7 @@ import {PrefectureReportComponent} from "./prefecture-report/prefecture-report.c
 import {LoginComponent} from "./login/login.component";
 import {RegisterComponent} from "./register/register.component";
 import {AuthGuard} from "./utility-classes/authguard";
+import {LogoutComponent} from "./logout/logout.component";
 
 export const routerConfig:ExtraOptions = {
   onSameUrlNavigation: 'reload'
@@ -19,7 +20,7 @@ export const routes: Routes = [
   {
     path: 'explore-map',
     loadChildren: () => import('./explore-map/explore-map.module').then(m => m.ExploreMapModule),
-    canActivateChild: [AuthGuard],
+    canActivate:[AuthGuard]
   },
   { path: 'regions', component: RegionsComponent,canActivate: [AuthGuard]},
   { path: 'regions/:id', component: RegionReportComponent ,canActivate: [AuthGuard]},
@@ -27,6 +28,7 @@ export const routes: Routes = [
   { path: 'features', component: OtaFeaturesComponent ,canActivate: [AuthGuard]},
   { path: 'features/:id', component: OtaFeatureDetailsComponent,canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
+  { path: 'logout', component: LogoutComponent, canActivate: [AuthGuard] },
   { path: 'register', component: RegisterComponent },
 ];
 
