@@ -1,9 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import { Router, RouterOutlet} from '@angular/router';
 import {NavbarComponent} from "./core/navbar/navbar.component";
-import { CookieService } from 'ngx-cookie-service';
 import { NgIf} from "@angular/common";
-import {UserLoginResultsInterface} from "./shared/interfaces/UserFormInterface";
 import {AuthGuard} from "./utility-classes/authguard";
 
 @Component({
@@ -12,39 +10,16 @@ import {AuthGuard} from "./utility-classes/authguard";
   imports: [RouterOutlet, NavbarComponent, NgIf],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  providers:[CookieService]
+  providers:[]
 })
 export class AppComponent {
   title = 'ota-observatory-platform';
 
-  constructor(private router:Router,private cookieService:CookieService,private authGuard :AuthGuard) {
-  }
-
-
-  ngOnInit() {
-    console.log(this.authGuard.isAuthRoute())
-    const userSession = this.authGuard.checkAuthentication().then((userSession=>{
-      if(!userSession && !this.authGuard.isAuthRoute()){
-        console.log('userSession',userSession)
-        this.router.navigate(['login']);
-      }
-    }))
+  constructor( private authGuard :AuthGuard) {
   }
 
   isLoggedIn(): boolean {
-    const token = this.cookieService.get('authToken'); // Get token from cookies
-    return !!token; // Return true if token exists, otherwise false
+    return this.authGuard.shouldDisplayNav
   }
 
-  isAuthRoute(): boolean {
-    return this.authGuard.isAuthRoute();
-  }
-
-  getLoggedInUser(): UserLoginResultsInterface | null {
-    const token:UserLoginResultsInterface = JSON.parse(this.cookieService.get('authToken'));
-    if (token) {
-      return token;
-    }
-    return null;
-  }
 }

@@ -17,12 +17,8 @@ export class RegisterComponent   {
   constructor(private rs : RegisterService, private formBuilder: FormBuilder,private router: Router, private authGuard: AuthGuard) {
   }
 
-  ngOnInit() {
-    const userSession = this.authGuard.checkAuthentication().then((userSession=>{
-      if(userSession?.token !== '' ){
-        this.router.navigate(['/']);
-      }
-    }))
+  ngOnInit(){
+    this.authGuard.checkAuthentication().then(r => r && this.router.navigate(['']))
   }
 
   form = this.formBuilder.nonNullable.group({
@@ -35,8 +31,7 @@ export class RegisterComponent   {
     this.router.navigate(['login']);
   }
 
-  onSubmit(){this.rs.postRegistrationData(this.form.getRawValue()).subscribe({next:(res)=>{
-      this.authGuard.sessionDataReceived = res
+  onSubmit(){this.rs.postRegistrationData(this.form.getRawValue()).subscribe({next:()=>{
       this.router.navigate([''])
     }})}
 

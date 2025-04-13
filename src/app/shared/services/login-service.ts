@@ -22,16 +22,12 @@ export class LoginService {
     });
   }
 
-  getSessionValidity(token: string): Observable<UserLoginResultsInterface> {
-    return this.http.get<UserSessionInterface>(this.apiUrl + 'token-check', {
-      params: { token: token },
-      withCredentials: true
-    });
+  getSessionValidity(): Observable<UserLoginResultsInterface> {
+    return this.http.post<UserSessionInterface>(this.apiUrl + 'token-check',{},{withCredentials:true});
   }
 
-  logoutUser(token: string): Observable<UserLoginResultsInterface> {
+  logoutUser(): Observable<UserLoginResultsInterface> {
     return this.http.get<UserLoginResultsInterface>(this.apiUrl + 'logout', {
-      params: { token: token },
       withCredentials: true
     });
   }

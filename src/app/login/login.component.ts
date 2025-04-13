@@ -21,12 +21,8 @@ export class LoginComponent  {
     this.errorMessage = '';
   }
 
-  ngOnInit() {
-    const userSession = this.authGuard.checkAuthentication().then((userSession=>{
-      if(userSession?.token !== '' ){
-        this.router.navigate(['/']);
-      }
-    }))
+  ngOnInit(){
+    this.authGuard.checkAuthentication().then(r => r && this.router.navigate(['']))
   }
 
 
@@ -42,7 +38,6 @@ export class LoginComponent  {
   onSubmit() {
     this.ls.postLoginData(this.form.getRawValue()).subscribe({
       next: (res) => {
-        this.authGuard.sessionDataReceived = res
         this.router.navigate(['']);
       },
       error: (error) => {
