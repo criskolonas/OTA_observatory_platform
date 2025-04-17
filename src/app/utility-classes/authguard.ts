@@ -6,6 +6,9 @@ import {
 } from '@angular/router';
 import { LoginService } from '../shared/services/login-service';
 import {Injectable} from "@angular/core";
+import {ToastService} from "../shared/services/toast.service";
+import {HttpErrorResponse} from "@angular/common/http";
+
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +26,7 @@ export class AuthGuard implements CanActivate {
     this._shouldDisplayNav = value;
   }
 
-  constructor(private ls: LoginService, private router: Router) {
+  constructor(private ls: LoginService, private router: Router,private toastService: ToastService) {
   }
 
   public checkAuthentication(): Promise<boolean> {
@@ -36,11 +39,13 @@ export class AuthGuard implements CanActivate {
               return;
             }
           },
-          error: (err) => {
+          error: (err: HttpErrorResponse) => {
+            this.toastService.showToaster(err.status,'checkValidation')
             console.error('[TOKEN CHECK]An error occurred:', err);
             this.router.navigate(['login'])
             this.shouldDisplayNav = false;
             resolve(false);
+            return
           },
         });
     });

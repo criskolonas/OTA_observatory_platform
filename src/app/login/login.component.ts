@@ -6,6 +6,7 @@ import {LoginService} from "../shared/services/login-service";
 import {Router, UrlTree} from "@angular/router";
 import {AuthGuard} from "../utility-classes/authguard";
 import {UserDataService} from "../shared/services/user-data.service";
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,7 @@ import {UserDataService} from "../shared/services/user-data.service";
 export class LoginComponent  {
   @Output() errorMessage:String;
 
-  constructor(private ls : LoginService, private formBuilder: FormBuilder,private authGuard:AuthGuard,private router: Router,
+  constructor(private ls : LoginService, private formBuilder: FormBuilder,private authGuard:AuthGuard,private router: Router,private messageService: MessageService
   ) {
     this.errorMessage = '';
   }
