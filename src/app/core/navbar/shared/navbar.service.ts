@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import {NavItem} from "./nav-item.model";
 import {Router} from "@angular/router";
-import {LoginService} from "../../../shared/services/login-service";
-import {map} from "rxjs";
-import {UserLoginResultsInterface} from "../../../shared/interfaces/UserFormInterface";
 import {AuthGuard} from "../../../utility-classes/authguard";
+import {UserDataService} from "../../../shared/services/user-data.service";
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +11,7 @@ export class NavbarService {
 
   constructor(
     private router: Router,
-    private authguard: AuthGuard
+    private userData: UserDataService
   ) { }
 
   private _navItems: NavItem[] = [
@@ -46,7 +44,7 @@ export class NavbarService {
       }
     },
     {
-      label: 'Αποσύνδεση',
+      label: `Αποσύνδεση ${this.userData.sessionData.username ?? ""}`,
       path: ['logout'],
       action: () => {
         this.router.navigate(['logout'])

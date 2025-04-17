@@ -1,12 +1,11 @@
-import { Injectable } from '@angular/core';
 import {
   CanActivate,
-  CanActivateChild,
   Router,
   ActivatedRouteSnapshot,
   RouterStateSnapshot
 } from '@angular/router';
 import { LoginService } from '../shared/services/login-service';
+import {Injectable} from "@angular/core";
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +13,7 @@ import { LoginService } from '../shared/services/login-service';
 export class AuthGuard implements CanActivate {
 
   private _shouldDisplayNav = false
+
 
   get shouldDisplayNav(): boolean {
     return this._shouldDisplayNav;
@@ -44,15 +44,6 @@ export class AuthGuard implements CanActivate {
           },
         });
     });
-  }
-
-  public logout(): void {
-      try {
-        this.ls.logoutUser().subscribe();
-        this.router.navigate(['login'])
-      } catch (error) {
-        console.error('[LOGOUT]An error occurred:', error);
-      }
   }
 
   public async canActivate(
