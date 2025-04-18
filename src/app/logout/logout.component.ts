@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {AuthGuard} from "../utility-classes/authguard";
 import {LogoutService} from "../shared/services/logout.service";
 import {Router} from "@angular/router";
+import {UserDataService} from "../shared/services/user-data.service";
 
 @Component({
   selector: 'app-logout',
@@ -12,13 +13,14 @@ import {Router} from "@angular/router";
 })
 export class LogoutComponent {
 
-  constructor(private logoutService: LogoutService, private router: Router) {
+  constructor(private logoutService: LogoutService, private router: Router,private ud:UserDataService) {
     this.logout()
   }
 
   public logout(): void {
     try {
       this.logoutService.logoutUser().subscribe();
+      this.ud.sessionData = {shouldDisplayNav:false,username:""}
       this.router.navigate(['login'])
     } catch (error) {
       console.error('[LOGOUT]An error occurred:', error);

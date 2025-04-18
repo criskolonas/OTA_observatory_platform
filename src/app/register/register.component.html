@@ -25,8 +25,16 @@
       Password is required.
     </div>
   </div>
+    <re-captcha
+      [siteKey]=environment.recaptcha.sitekey
+      (resolved)="handleCaptchaResponse($event)"
+      (expired)="onExpired()">
+      formControlName="recaptcha">
+    </re-captcha>    <div *ngIf="form.get('recaptcha')?.invalid && form.get('recaptcha')?.touched" class="error">
+      Please complete the CAPTCHA
+    </div>
 
-  <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Εγγραφή</button>
+  <button type="submit" class="btn btn-primary" [disabled]="form.invalid  || !this.recaptchaResolved">Εγγραφή</button>
 
 </form>
     <button (click)="navigateToLogin()" class="btn btn-primary"><a>Σύνδεση Χρήστη</a></button>

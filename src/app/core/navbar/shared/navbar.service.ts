@@ -44,7 +44,7 @@ export class NavbarService {
       }
     },
     {
-      label: `Αποσύνδεση ${this.userData.sessionData.username ?? ""}`,
+      label: `Αποσύνδεση (${this.userData.sessionData.username ?? ""})`,
       path: ['logout'],
       action: () => {
         this.router.navigate(['logout'])

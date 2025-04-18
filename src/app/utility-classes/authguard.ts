@@ -8,6 +8,7 @@ import { LoginService } from '../shared/services/login-service';
 import {Injectable} from "@angular/core";
 import {ToastService} from "../shared/services/toast.service";
 import {HttpErrorResponse} from "@angular/common/http";
+import {UserDataService} from "../shared/services/user-data.service";
 
 
 @Injectable({
@@ -15,18 +16,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 })
 export class AuthGuard implements CanActivate {
 
-  private _shouldDisplayNav = false
-
-
-  get shouldDisplayNav(): boolean {
-    return this._shouldDisplayNav;
-  }
-
-  set shouldDisplayNav(value: boolean) {
-    this._shouldDisplayNav = value;
-  }
-
-  constructor(private ls: LoginService, private router: Router,private toastService: ToastService) {
+  constructor(private ls: LoginService, private router: Router,private toastService: ToastService,private userData:UserDataService) {
   }
 
   public checkAuthentication(): Promise<boolean> {
@@ -34,15 +24,15 @@ export class AuthGuard implements CanActivate {
         this.ls.getSessionValidity().subscribe({
           next: (res) => {
             if(res) {
-              this.shouldDisplayNav=true;
+              this.userData.sessionData = {shouldDisplayNav:true,username: res.username}
               resolve(true);
               return;
             }
           },
           error: (err: HttpErrorResponse) => {
+            this.userData.sessionData = {username:'',shouldDisplayNav:false}
             this.toastService.showToast(err.error)
             this.router.navigate(['login'])
-            this.shouldDisplayNav = false;
             resolve(false);
             return
           },

@@ -9,6 +9,7 @@ import {LoginComponent} from "./login/login.component";
 import {RegisterComponent} from "./register/register.component";
 import {AuthGuard} from "./utility-classes/authguard";
 import {LogoutComponent} from "./logout/logout.component";
+import {AuthenticatedGuard} from "./utility-classes/authenticatedguard";
 
 export const routerConfig:ExtraOptions = {
   onSameUrlNavigation: 'reload'
@@ -27,9 +28,9 @@ export const routes: Routes = [
   { path: 'prefecture/:id', component: PrefectureReportComponent,canActivate: [AuthGuard] },
   { path: 'features', component: OtaFeaturesComponent ,canActivate: [AuthGuard]},
   { path: 'features/:id', component: OtaFeatureDetailsComponent,canActivate: [AuthGuard] },
-  { path: 'login', component: LoginComponent },
+  { path: 'login', component: LoginComponent,canActivate:[AuthenticatedGuard] },
   { path: 'logout', component: LogoutComponent, canActivate: [AuthGuard] },
-  { path: 'register', component: RegisterComponent },
+  { path: 'register', component: RegisterComponent,canActivate:[AuthenticatedGuard] },
 ];
 
 

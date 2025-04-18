@@ -20,15 +20,17 @@ import {HttpErrorResponse} from "@angular/common/http";
 export class LoginComponent  {
   @Output() errorMessage:String;
 
-  constructor(private ls : LoginService, private formBuilder: FormBuilder,private authGuard:AuthGuard,private router: Router,private toast: ToastService
+  constructor(private ls : LoginService, private formBuilder: FormBuilder,private authGuard:AuthGuard,private router: Router,private toast: ToastService,private userData:UserDataService
   ) {
     this.errorMessage = '';
   }
 
-  ngOnInit(){
-    this.authGuard.checkAuthentication().then(r => r && this.router.navigate(['']))
+  ngOnInit() {
+    // Redirect if already logged in
+    if (!this.userData.sessionData.shouldDisplayNav) {
+      this.router.navigate(['']);
+    }
   }
-
 
   form = this.formBuilder.nonNullable.group({
     email: ['', [Validators.required,Validators.email]],

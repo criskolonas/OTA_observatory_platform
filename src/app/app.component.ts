@@ -4,6 +4,7 @@ import {NavbarComponent} from "./core/navbar/navbar.component";
 import { NgIf} from "@angular/common";
 import {AuthGuard} from "./utility-classes/authguard";
 import {ToastModule} from "primeng/toast";
+import {UserDataService} from "./shared/services/user-data.service";
 
 @Component({
   selector: 'app-root',
@@ -15,11 +16,11 @@ import {ToastModule} from "primeng/toast";
 export class AppComponent {
   title = 'ota-observatory-platform';
 
-  constructor( private authGuard :AuthGuard) {
+  constructor( private ud :UserDataService) {
   }
 
   isLoggedIn(): boolean {
-    return this.authGuard.shouldDisplayNav
+    return this.ud.sessionData.shouldDisplayNav
   }
 
 }
