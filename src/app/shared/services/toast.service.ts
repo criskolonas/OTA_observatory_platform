@@ -2,36 +2,14 @@ import { Injectable } from '@angular/core';
 import { MessageService } from 'primeng/api';
 
 @Injectable({
-  providedIn: 'root', // or you can add it to app.config.ts if preferred
+  providedIn: 'root',
 })
 export class ToastService {
   constructor(private messageService: MessageService) {}
 
-  private ToasterVariations =
-    {
-      'checkValidation': {
-        429: {
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Too many requests. Try again later.'
-
-        }
-      },
-      'login': {
-        429: {
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Too many requests. Try again later.'
-
-        }
-      },
-
-    }
-
-  showToaster(errorCode:number,destination:string) {
-    if(destination && errorCode){
-      // @ts-ignore
-      this.messageService.add(this.ToasterVariations[destination][errorCode]);
+  showToast(message:string) {
+    if(message){
+      this.messageService.add({detail:message,severity:"error"});
     }
   }
 

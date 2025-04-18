@@ -5,19 +5,19 @@ export interface UserLoginInterface {
 
 export interface UserLoginResultsInterface {
   email: string;
-  userName: string;
+  username: string;
   token:string;
 }
 
 export interface UserSessionInterface {
   email: string;
-  userName: string;
+  username: string;
   token: string;
 }
 
 
 export interface UserRegisterInterface {
   email: string;
-  userName: string;
+  username: string;
   password: string;
 }

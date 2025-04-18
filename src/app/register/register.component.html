@@ -3,9 +3,9 @@
 
   <form class="form-container" [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="form-group">
-    <label for="userName">Username</label>
-    <input type="text" id="userName" formControlName="userName" class="form-control" />
-    <div *ngIf="form.get('userName')?.invalid && form.get('userName')?.touched" class="error">
+    <label for="username">Username</label>
+    <input type="text" id="username" formControlName="username" class="form-control" />
+    <div *ngIf="form.get('username')?.invalid && form.get('username')?.touched" class="error">
       Username is required.
     </div>
   </div>

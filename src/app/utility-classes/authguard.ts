@@ -40,8 +40,7 @@ export class AuthGuard implements CanActivate {
             }
           },
           error: (err: HttpErrorResponse) => {
-            this.toastService.showToaster(err.status,'checkValidation')
-            console.error('[TOKEN CHECK]An error occurred:', err);
+            this.toastService.showToast(err.error)
             this.router.navigate(['login'])
             this.shouldDisplayNav = false;
             resolve(false);

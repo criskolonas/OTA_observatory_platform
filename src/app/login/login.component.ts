@@ -7,6 +7,8 @@ import {Router, UrlTree} from "@angular/router";
 import {AuthGuard} from "../utility-classes/authguard";
 import {UserDataService} from "../shared/services/user-data.service";
 import {MessageService} from "primeng/api";
+import {ToastService} from "../shared/services/toast.service";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-login',
@@ -18,7 +20,7 @@ import {MessageService} from "primeng/api";
 export class LoginComponent  {
   @Output() errorMessage:String;
 
-  constructor(private ls : LoginService, private formBuilder: FormBuilder,private authGuard:AuthGuard,private router: Router,private messageService: MessageService
+  constructor(private ls : LoginService, private formBuilder: FormBuilder,private authGuard:AuthGuard,private router: Router,private toast: ToastService
   ) {
     this.errorMessage = '';
   }
@@ -42,12 +44,8 @@ export class LoginComponent  {
       next: (res) => {
         this.router.navigate(['']);
       },
-      error: (error) => {
-        if (error.status === 404) {
-          this.errorMessage = 'User Not Found';
-        } else if (error.status === 401) {
-          this.errorMessage = 'Invalid password. Please try again.';
-        }
+      error: (error:HttpErrorResponse) => {
+        this.toast.showToast(error.error)
       }
     });
   }

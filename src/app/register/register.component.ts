@@ -1,9 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {RegisterService} from "../shared/services/register-service";
 import {NgIf} from "@angular/common";
 import {Router} from "@angular/router";
 import {AuthGuard} from "../utility-classes/authguard";
+import {ToastService} from "../shared/services/toast.service";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-register',
@@ -14,15 +16,11 @@ import {AuthGuard} from "../utility-classes/authguard";
 })
 export class RegisterComponent   {
 
-  constructor(private rs : RegisterService, private formBuilder: FormBuilder,private router: Router, private authGuard: AuthGuard) {
-  }
-
-  ngOnInit(){
-    this.authGuard.checkAuthentication().then(r => r && this.router.navigate(['']))
+  constructor(private rs : RegisterService, private formBuilder: FormBuilder,private router: Router, private toast:ToastService) {
   }
 
   form = this.formBuilder.nonNullable.group({
-    userName: ['', [Validators.required]],
+    username: ['', [Validators.required]],
     email: ['', [Validators.required,Validators.email]],
     password: ['', [Validators.required]]
   })
@@ -33,6 +31,8 @@ export class RegisterComponent   {
 
   onSubmit(){this.rs.postRegistrationData(this.form.getRawValue()).subscribe({next:()=>{
       this.router.navigate([''])
-    }})}
+    },error:(err:HttpErrorResponse)=> {
+      this.toast.showToast(err.error)
+  }} )}
 
 }
