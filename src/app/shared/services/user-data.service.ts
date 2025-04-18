@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 
 interface SessionDataType{
   username?:string
-  shouldDisplayNav?:boolean
+  shouldDisplayNav:boolean
 }
 
 @Injectable({

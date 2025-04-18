@@ -68,6 +68,10 @@ form{
   background-color: #0056b3;
 }
 
+.register-box form button:disabled{
+  background-color: gray;
+}
+
 .error {
   position: relative;
   color: red;
