@@ -1,43 +1,36 @@
-import {Component, Input, OnInit, Output} from '@angular/core';
-import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
-import {NgIf} from "@angular/common";
-import {LoginService} from "../shared/services/login-service";
-
-import {Router, UrlTree} from "@angular/router";
-import {AuthGuard} from "../utility-classes/authguard";
-import {UserDataService} from "../shared/services/user-data.service";
-import {MessageService} from "primeng/api";
-import {ToastService} from "../shared/services/toast.service";
-import {HttpErrorResponse} from "@angular/common/http";
+import { Component, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NgIf } from '@angular/common';
+import { LoginService } from '../shared/services/login-service';
+import { Router } from '@angular/router';
+import { UserDataService } from '../shared/services/user-data.service';
+import { ToastService } from '../shared/services/toast.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AuthService } from '../shared/services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [NgIf, ReactiveFormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrl: './login.component.scss',
 })
-export class LoginComponent  {
-  @Output() errorMessage:String;
-
-  constructor(private ls : LoginService, private formBuilder: FormBuilder,private authGuard:AuthGuard,private router: Router,private toast: ToastService,private userData:UserDataService
-  ) {
-    this.errorMessage = '';
-  }
-
-  ngOnInit() {
-    // Redirect if already logged in
-    if (!this.userData.sessionData.shouldDisplayNav) {
-      this.router.navigate(['']);
-    }
-  }
+export class LoginComponent {
+  constructor(
+    private ls: LoginService,
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private toast: ToastService,
+    private userData: UserDataService,
+    private authService: AuthService,
+  ) {}
 
   form = this.formBuilder.nonNullable.group({
-    email: ['', [Validators.required,Validators.email]],
-    password: ['', [Validators.required]]
-  })
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required]],
+  });
 
-  public navigateToRegister():void {
+  public navigateToRegister(): void {
     this.router.navigate(['register']);
   }
 
@@ -46,9 +39,9 @@ export class LoginComponent  {
       next: (res) => {
         this.router.navigate(['']);
       },
-      error: (error:HttpErrorResponse) => {
-        this.toast.showToast(error.error)
-      }
+      error: (error: HttpErrorResponse) => {
+        this.toast.showToast(error.error);
+      },
     });
   }
 }

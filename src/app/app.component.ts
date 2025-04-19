@@ -1,10 +1,10 @@
-import {Component} from '@angular/core';
-import { RouterOutlet} from '@angular/router';
-import {NavbarComponent} from "./core/navbar/navbar.component";
-import { NgIf} from "@angular/common";
-import {AuthGuard} from "./utility-classes/authguard";
-import {ToastModule} from "primeng/toast";
-import {UserDataService} from "./shared/services/user-data.service";
+import { Component } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
+import { NavbarComponent } from './core/navbar/navbar.component';
+import { NgIf } from '@angular/common';
+import { AuthGuard } from './utility-classes/authguard';
+import { ToastModule } from 'primeng/toast';
+import { UserDataService } from './shared/services/user-data.service';
 
 @Component({
   selector: 'app-root',
@@ -16,11 +16,14 @@ import {UserDataService} from "./shared/services/user-data.service";
 export class AppComponent {
   title = 'ota-observatory-platform';
 
-  constructor( private ud :UserDataService) {
+  constructor(
+    private ud: UserDataService,
+    private router: Router,
+  ) {
+    router.events.subscribe(console.log);
   }
 
   isLoggedIn(): boolean {
-    return this.ud.sessionData.shouldDisplayNav
+    return this.ud.sessionData.shouldDisplayNav;
   }
-
 }
