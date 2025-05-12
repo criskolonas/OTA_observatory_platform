@@ -22,7 +22,7 @@ export class LogoutComponent {
   public logout(): void {
     try {
       this.logoutService.logoutUser().subscribe();
-      this.ud.sessionData = { shouldDisplayNav: false, username: '' };
+      this.ud.sessionData = null;
       this.router.navigate(['login']);
     } catch (error) {
       console.error('[LOGOUT]An error occurred:', error);

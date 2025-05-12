@@ -3,4 +3,5 @@ export interface NavItem {
   icon?: string;
   path: any[];
   action: () => void;
+  admin?: boolean;
 }

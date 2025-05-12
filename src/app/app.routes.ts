@@ -16,6 +16,7 @@ import { RegisterComponent } from './register/register.component';
 import { AuthGuard } from './utility-classes/authguard';
 import { LogoutComponent } from './logout/logout.component';
 import { AuthenticatedGuard } from './utility-classes/authenticatedguard';
+import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 
 export const routerConfig: ExtraOptions = {
   onSameUrlNavigation: 'reload',
@@ -42,6 +43,11 @@ export const routes: Routes = [
     path: 'home',
     pathMatch: 'full',
     component: HomeComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'admin-panel',
+    component: AdminPanelComponent,
     canActivate: [AuthGuard],
   },
   {

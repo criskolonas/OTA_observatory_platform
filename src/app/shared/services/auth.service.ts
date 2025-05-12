@@ -29,13 +29,14 @@ export class AuthService {
             this.userData.sessionData = {
               shouldDisplayNav: true,
               username: res.username,
+              isAdmin: res.is_admin,
             };
             resolve(true);
             return;
           }
         },
         error: (err: HttpErrorResponse) => {
-          this.userData.sessionData = { username: '', shouldDisplayNav: false };
+          this.userData.sessionData = null;
           !hideToaster && this.toastService.showToast(err.error);
           resolve(false);
           return;

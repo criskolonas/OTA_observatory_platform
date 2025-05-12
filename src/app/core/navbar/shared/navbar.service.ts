@@ -42,7 +42,15 @@ export class NavbarService {
       },
     },
     {
-      label: `Αποσύνδεση (${this.userData.sessionData.username ?? ''})`,
+      label: 'Διαχείριση',
+      path: ['admin-panel'],
+      admin: true,
+      action: () => {
+        this.router.navigate(['admin-panel']);
+      },
+    },
+    {
+      label: `Αποσύνδεση (${this.userData?.sessionData?.username ?? ''})`,
       path: ['logout'],
       action: () => {
         this.router.navigate(['logout']);
@@ -51,6 +59,8 @@ export class NavbarService {
   ];
 
   get navItems(): NavItem[] {
-    return this._navItems;
+    return this.userData?.sessionData?.isAdmin
+      ? this._navItems
+      : this._navItems.filter((navItem) => !navItem.admin);
   }
 }

@@ -1,0 +1,23 @@
+<table mat-table [dataSource]="data()" class="mat-elevation-z8">
+  <ng-container *ngFor="let column of columns" [matColumnDef]="column.name">
+    <th mat-header-cell *matHeaderCellDef>{{ column.header }}</th>
+    <td mat-cell *matCellDef="let element">
+      <ng-container *ngIf="column.type === 'text'">
+        {{ element[column.name] }}
+      </ng-container>
+      <mat-checkbox
+        *ngIf="column.type === 'checkbox'"
+        [checked]="element[column.name]"
+        (change)="onCheckboxChange(element, column.name, $event.checked)"
+      >
+      </mat-checkbox>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="getColumnNames()"></tr>
+  <tr mat-row *matRowDef="let row; columns: getColumnNames()"></tr>
+</table>
+
+<button *ngIf="onPostClick" class="btn btn-primary" (click)="onPostClick()">
+  Τέλος Επεξεργασίας
+</button>

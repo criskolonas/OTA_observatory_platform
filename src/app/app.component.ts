@@ -24,6 +24,6 @@ export class AppComponent {
   }
 
   isLoggedIn(): boolean {
-    return this.ud.sessionData.shouldDisplayNav;
+    return this.ud?.sessionData?.shouldDisplayNav || false;
   }
 }

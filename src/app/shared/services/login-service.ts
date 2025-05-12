@@ -8,6 +8,10 @@ import {
   UserLoginResultsInterface,
   UserSessionInterface,
 } from '../interfaces/UserFormInterface';
+import {
+  UserDataReqType,
+  UserDataTableType,
+} from '../../admin-panel/admin-panel.component';
 
 @Injectable({
   providedIn: 'root',
@@ -35,11 +39,5 @@ export class LoginService {
       {},
       { withCredentials: true },
     );
-  }
-
-  logoutUser(): Observable<UserLoginResultsInterface> {
-    return this.http.get<UserLoginResultsInterface>(this.apiUrl + 'logout', {
-      withCredentials: true,
-    });
   }
 }
