@@ -17,6 +17,7 @@ import { AuthGuard } from './utility-classes/authguard';
 import { LogoutComponent } from './logout/logout.component';
 import { AuthenticatedGuard } from './utility-classes/authenticatedguard';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
+import { AdminAuthGuard } from './utility-classes/adminauthguard';
 
 export const routerConfig: ExtraOptions = {
   onSameUrlNavigation: 'reload',
@@ -48,7 +49,7 @@ export const routes: Routes = [
   {
     path: 'admin-panel',
     component: AdminPanelComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AdminAuthGuard],
   },
   {
     path: 'explore-map',

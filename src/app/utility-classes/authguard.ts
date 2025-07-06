@@ -1,15 +1,12 @@
 import {
+  ActivatedRouteSnapshot,
   CanActivate,
   Router,
-  ActivatedRouteSnapshot,
   RouterStateSnapshot,
 } from '@angular/router';
-import { LoginService } from '../shared/services/login-service';
 import { Injectable } from '@angular/core';
-import { ToastService } from '../shared/services/toast.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { UserDataService } from '../shared/services/user-data.service';
 import { AuthService } from '../shared/services/auth.service';
+import { RoleEnum } from '../shared/interfaces/UserFormInterface';
 
 @Injectable({
   providedIn: 'root',
@@ -24,9 +21,8 @@ export class AuthGuard implements CanActivate {
     _route: ActivatedRouteSnapshot,
     _state: RouterStateSnapshot,
   ): Promise<boolean> {
-    const isConnected = await this.authService.checkAuthentication(true);
-    console.log(isConnected);
-    if (isConnected) {
+    const userRes = await this.authService.checkAuthentication(true);
+    if (userRes && userRes.role.some((role) => role.id === RoleEnum.USER)) {
       return true;
     }
     this.router.navigate(['login']);

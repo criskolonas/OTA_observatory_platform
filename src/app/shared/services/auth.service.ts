@@ -6,6 +6,7 @@ import { LoginService } from './login-service';
 import { Router } from '@angular/router';
 import { ToastService } from './toast.service';
 import { UserDataService } from './user-data.service';
+import { UserLoginResultsInterface } from '../interfaces/UserFormInterface';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +22,9 @@ export class AuthService {
     private userData: UserDataService,
   ) {}
 
-  public checkAuthentication(hideToaster?: boolean): Promise<boolean> {
+  public checkAuthentication(
+    hideToaster?: boolean,
+  ): Promise<UserLoginResultsInterface | null> {
     return new Promise((resolve) => {
       this.ls.getSessionValidity().subscribe({
         next: (res) => {
@@ -29,16 +32,16 @@ export class AuthService {
             this.userData.sessionData = {
               shouldDisplayNav: true,
               username: res.username,
-              isAdmin: res.is_admin,
+              role: res.role,
             };
-            resolve(true);
+            resolve(res);
             return;
           }
         },
         error: (err: HttpErrorResponse) => {
           this.userData.sessionData = null;
           !hideToaster && this.toastService.showToast(err.error);
-          resolve(false);
+          resolve(null);
           return;
         },
       });

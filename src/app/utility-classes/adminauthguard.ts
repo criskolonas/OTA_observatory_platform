@@ -1,16 +1,17 @@
 import {
-  CanActivate,
   ActivatedRouteSnapshot,
-  RouterStateSnapshot,
+  CanActivate,
   Router,
+  RouterStateSnapshot,
 } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { AuthService } from '../shared/services/auth.service';
+import { RoleEnum } from '../shared/interfaces/UserFormInterface';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthenticatedGuard implements CanActivate {
+export class AdminAuthGuard implements CanActivate {
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -20,12 +21,11 @@ export class AuthenticatedGuard implements CanActivate {
     _route: ActivatedRouteSnapshot,
     _state: RouterStateSnapshot,
   ): Promise<boolean> {
-    const isConnected = await this.authService.checkAuthentication(true);
-    console.log(isConnected);
-    if (isConnected) {
-      this.router.navigate(['']);
-      return false;
+    const userRes = await this.authService.checkAuthentication(true);
+    if (userRes && userRes.role.some((role) => role.id === RoleEnum.ADMIN)) {
+      return true;
     }
-    return true;
+    this.router.navigate(['login']);
+    return false;
   }
 }

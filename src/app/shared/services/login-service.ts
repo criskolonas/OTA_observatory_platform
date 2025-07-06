@@ -34,7 +34,7 @@ export class LoginService {
   }
 
   getSessionValidity(): Observable<UserLoginResultsInterface> {
-    return this.http.post<UserSessionInterface>(
+    return this.http.post<UserLoginResultsInterface>(
       this.apiUrl + 'token-check',
       {},
       { withCredentials: true },

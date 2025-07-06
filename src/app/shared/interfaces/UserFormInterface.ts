@@ -1,20 +1,32 @@
+export enum RoleEnum {
+  ADMIN = 1,
+  USER = 2,
+}
+
+export interface SessionDataType {
+  username: string;
+  shouldDisplayNav: boolean;
+  role: Role[];
+}
+
+export interface Role {
+  id: RoleEnum;
+  name: string;
+}
 export interface UserLoginInterface {
   email: string;
   password: string;
 }
 
 export interface UserLoginResultsInterface {
-  is_admin: boolean;
   email: string;
   username: string;
-  token: string;
+  role: Role[];
 }
 
 export interface UserSessionInterface {
   email: string;
   username: string;
-  token: string;
-  is_admin: boolean;
 }
 
 export interface UserRegisterInterface {

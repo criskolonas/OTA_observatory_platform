@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { NavItem } from './nav-item.model';
 import { Router } from '@angular/router';
 import { UserDataService } from '../../../shared/services/user-data.service';
+import { RoleEnum } from '../../../shared/interfaces/UserFormInterface';
 
 @Injectable({
   providedIn: 'root',
@@ -59,7 +60,9 @@ export class NavbarService {
   ];
 
   get navItems(): NavItem[] {
-    return this.userData?.sessionData?.isAdmin
+    return this.userData?.sessionData?.role.some(
+      (role) => role.id === RoleEnum.ADMIN,
+    )
       ? this._navItems
       : this._navItems.filter((navItem) => !navItem.admin);
   }

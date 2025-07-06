@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
-
-interface SessionDataType {
-  username: string;
-  shouldDisplayNav: boolean;
-  isAdmin: boolean;
-}
+import { SessionDataType } from '../interfaces/UserFormInterface';
 
 @Injectable({
   providedIn: 'root',
