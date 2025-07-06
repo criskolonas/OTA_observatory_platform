@@ -70,7 +70,7 @@ export class AdminPanelComponent implements OnInit {
   handleTablePost = (data: Signal<UserDataTableType[]>): void => {
     this.usersService.postUserPermissions(data()).subscribe({
       next: (res) => {
-        this.toast.showToast('ok');
+        this.toast.showToast('Τα δεδομένα ενημερώθηκαν.', true);
       },
       error: (err: HttpErrorResponse) => {
         this.toast.showToast(err.error);
