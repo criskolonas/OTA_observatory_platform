@@ -23,7 +23,7 @@ export class UsersService {
   constructor(private http: HttpClient) {}
 
   getAllUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.apiUrl + 'all-users', {
+    return this.http.get<User[]>(this.apiUrl + 'api/admin/all-users', {
       withCredentials: true,
     });
   }
@@ -37,7 +37,7 @@ export class UsersService {
     }));
 
     return this.http.post<UserDataReqType[]>(
-      this.apiUrl + 'change-permissions',
+      this.apiUrl + 'api/admin/change-permissions',
       payload,
       {
         withCredentials: true,

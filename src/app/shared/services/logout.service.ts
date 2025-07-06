@@ -18,8 +18,12 @@ export class LogoutService {
   constructor(private http: HttpClient) {}
 
   logoutUser(): Observable<UserLoginResultsInterface> {
-    return this.http.get<UserLoginResultsInterface>(this.apiUrl + 'logout', {
-      withCredentials: true,
-    });
+    return this.http.post<UserLoginResultsInterface>(
+      this.apiUrl + 'api/logout',
+      {},
+      {
+        withCredentials: true,
+      },
+    );
   }
 }
