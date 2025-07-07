@@ -6,12 +6,7 @@ import { Observable } from 'rxjs';
 import {
   UserLoginInterface,
   UserLoginResultsInterface,
-  UserSessionInterface,
 } from '../interfaces/UserFormInterface';
-import {
-  UserDataReqType,
-  UserDataTableType,
-} from '../../admin-panel/admin-panel.component';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +20,7 @@ export class LoginService {
     loginData: UserLoginInterface,
   ): Observable<UserLoginResultsInterface> {
     return this.http.post<UserLoginResultsInterface>(
-      this.apiUrl + 'login',
+      this.apiUrl + 'api/login',
       loginData,
       {
         withCredentials: true,
@@ -35,7 +30,7 @@ export class LoginService {
 
   getSessionValidity(): Observable<UserLoginResultsInterface> {
     return this.http.post<UserLoginResultsInterface>(
-      this.apiUrl + 'token-check',
+      this.apiUrl + 'api/user/token-check',
       {},
       { withCredentials: true },
     );

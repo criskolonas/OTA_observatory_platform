@@ -12,14 +12,20 @@ export class ExploreMapService {
   constructor(private http: HttpClient) {}
 
   getRegions(): Observable<RegionGeomSimple[]> {
-    return this.http.get<RegionGeomSimple[]>(this.apiUrl + 'regions/geom', {
-      withCredentials: true,
-    });
+    return this.http.get<RegionGeomSimple[]>(
+      this.apiUrl + 'api/user/regions/geom',
+      {
+        withCredentials: true,
+      },
+    );
   }
 
   getPrefecturesByRegion(regionId: number): Observable<PrefectureGeomSimple[]> {
     return this.http.get<PrefectureGeomSimple[]>(
-      this.apiUrl + 'prefectures/geom/region/' + regionId,
+      this.apiUrl + 'api/user/prefectures/geom/region/' + regionId,
+      {
+        withCredentials: true,
+      },
     );
   }
 }

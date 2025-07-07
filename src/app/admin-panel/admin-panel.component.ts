@@ -6,16 +6,12 @@ import {
 import { UsersService } from '../shared/services/users-service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastService } from '../shared/services/toast.service';
-import { LoginService } from '../shared/services/login-service';
+import {
+  RoleEnum,
+  UserDataTableType,
+} from '../shared/interfaces/UserFormInterface';
 
-export interface UserDataTableType {
-  username: string;
-  email: string;
-  created_at: string;
-  is_admin: boolean;
-}
-
-export type UserDataReqType = Pick<UserDataTableType, 'email' | 'is_admin'>;
+export type UserDataReqType = Pick<UserDataTableType, 'email' | 'isAdmin'>;
 
 @Component({
   selector: 'app-admin-panel',
@@ -43,7 +39,7 @@ export class AdminPanelComponent implements OnInit {
     },
     {
       header: 'Admin',
-      name: 'is_admin',
+      name: 'isAdmin',
       type: 'checkbox',
     },
   ];
@@ -52,14 +48,18 @@ export class AdminPanelComponent implements OnInit {
 
   constructor(
     private usersService: UsersService,
-    private ls: LoginService,
     private toast: ToastService,
   ) {}
 
   ngOnInit(): void {
     this.usersService.getAllUsers().subscribe({
       next: (res) => {
-        this.userData.set(res);
+        this.userData.set(
+          res.map((user) => ({
+            ...user,
+            isAdmin: user.role.some((role) => role.id === RoleEnum.ADMIN),
+          })),
+        );
       },
       error: (err: HttpErrorResponse) => {
         this.toast.showToast(err.error);

@@ -19,7 +19,7 @@ export class LogoutService {
 
   logoutUser(): Observable<UserLoginResultsInterface> {
     return this.http.post<UserLoginResultsInterface>(
-      this.apiUrl + 'api/logout',
+      this.apiUrl + 'api/user/logout',
       {},
       {
         withCredentials: true,

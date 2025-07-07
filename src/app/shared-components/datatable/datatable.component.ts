@@ -2,8 +2,6 @@ import { Component, Input, WritableSignal } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
-import { UserDataTableType } from '../../admin-panel/admin-panel.component';
-import { Observable } from 'rxjs';
 
 export interface ColumnDef<T> {
   header: string;

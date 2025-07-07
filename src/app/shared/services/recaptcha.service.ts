@@ -12,8 +12,14 @@ export class RecaptchaService {
   constructor(private http: HttpClient) {}
 
   postRecaptchaValidity(token: string): Observable<any> {
-    return this.http.post(this.apiUrl + 'recaptcha', {
-      captchaResponse: token,
-    });
+    return this.http.post(
+      this.apiUrl + 'api/recaptcha',
+      {
+        captchaResponse: token,
+      },
+      {
+        withCredentials: true,
+      },
+    );
   }
 }

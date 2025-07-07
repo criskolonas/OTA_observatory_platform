@@ -30,9 +30,14 @@ export class RegisterComponent {
   ) {}
 
   form = this.formBuilder.nonNullable.group({
-    username: ['', [Validators.required]],
+    username: [
+      '',
+      [Validators.required],
+      [Validators.minLength(4)],
+      [Validators.maxLength(12)],
+    ],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required]],
+    password: ['', [Validators.required, Validators.minLength(12)]],
   });
 
   public navigateToLogin(): void {

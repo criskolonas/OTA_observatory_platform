@@ -2,17 +2,8 @@ import { Injectable, Signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {
-  UserDataReqType,
-  UserDataTableType,
-} from '../../admin-panel/admin-panel.component';
-
-interface User {
-  username: string;
-  email: string;
-  created_at: string;
-  is_admin: boolean;
-}
+import { UserDataReqType } from '../../admin-panel/admin-panel.component';
+import { User, UserDataTableType } from '../interfaces/UserFormInterface';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +24,7 @@ export class UsersService {
   ): Observable<UserDataReqType[]> {
     const payload = updatedUsers.map((user) => ({
       email: user.email,
-      is_admin: user.is_admin,
+      isAdmin: user.isAdmin,
     }));
 
     return this.http.post<UserDataReqType[]>(
